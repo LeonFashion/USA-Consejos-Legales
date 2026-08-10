@@ -1,87 +1,82 @@
 /* =========================================================
-   ESTEFANIA LEÓN  
+   ESTEFANIA LEÓN
    U.S. LEGAL CONSULTATIONS
-
-   Main Website JavaScript
+   MAIN JAVASCRIPT
 ========================================================= */
 
 
 /* =========================================================
    EMAILJS CONFIGURATION
-
-   IMPORTANT:
-   Replace these four values after creating the EmailJS
-   service and two email templates.
 ========================================================= */
 
-const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-
-const EMAILJS_INTAKE_TEMPLATE_ID =
-  "YOUR_INTAKE_TEMPLATE_ID";
-
-const EMAILJS_CONFIRMATION_TEMPLATE_ID =
-  "YOUR_CONFIRMATION_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY = "LYeJ6_owxX85mSBAe";
+const EMAILJS_SERVICE_ID = "service_wjz8n7j";
+const EMAILJS_TEMPLATE_ID = "template_dhdo4vf";
 
 
 /* =========================================================
    INITIALIZE EMAILJS
 ========================================================= */
 
-if (
-  window.emailjs &&
-  EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY"
-) {
+if (window.emailjs) {
 
   emailjs.init({
     publicKey: EMAILJS_PUBLIC_KEY
   });
 
+} else {
+
+  console.error(
+    "EmailJS no se cargó correctamente."
+  );
+
 }
 
 
 /* =========================================================
-   SMOOTH PAGE NAVIGATION
+   SMOOTH SCROLLING
 ========================================================= */
 
-document.querySelectorAll('a[href^="#"]').forEach((link) => {
+document
+  .querySelectorAll('a[href^="#"]')
+  .forEach((link) => {
 
-  link.addEventListener("click", function(event) {
+    link.addEventListener(
+      "click",
+      function(event) {
 
-    const targetId = this.getAttribute("href");
+        const targetId =
+          this.getAttribute("href");
 
-    if (
-      !targetId ||
-      targetId === "#"
-    ) {
+        if (
+          !targetId ||
+          targetId === "#"
+        ) {
+          return;
+        }
 
-      event.preventDefault();
+        const target =
+          document.querySelector(targetId);
 
-      return;
+        if (!target) {
+          return;
+        }
 
-    }
+        event.preventDefault();
 
-    const target = document.querySelector(targetId);
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
 
-    if (!target) return;
-
-    event.preventDefault();
-
-    target.scrollIntoView({
-
-      behavior: "smooth",
-
-      block: "start"
-
-    });
+      }
+    );
 
   });
 
-});
-
 
 /* =========================================================
-   STICKY HEADER SHADOW
+   HEADER SCROLL EFFECT
 ========================================================= */
 
 const header =
@@ -89,7 +84,9 @@ const header =
 
 function updateHeader() {
 
-  if (!header) return;
+  if (!header) {
+    return;
+  }
 
   if (window.scrollY > 20) {
 
@@ -116,21 +113,331 @@ updateHeader();
 
 
 /* =========================================================
-   SUBTLE SCROLL REVEAL
+   CHARACTER COUNTER
+========================================================= */
+
+const messageField =
+  document.getElementById("message");
+
+const characterCount =
+  document.getElementById(
+    "characterCount"
+  );
+
+if (
+  messageField &&
+  characterCount
+) {
+
+  function updateCharacterCount() {
+
+    characterCount.textContent =
+      messageField.value.length;
+
+  }
+
+  messageField.addEventListener(
+    "input",
+    updateCharacterCount
+  );
+
+  updateCharacterCount();
+
+}
+
+
+/* =========================================================
+   AUTO-SELECT 30 / 60 MINUTE CONSULTATION
+========================================================= */
+
+const consultationSelect =
+  document.getElementById(
+    "consultation"
+  );
+
+document
+  .querySelectorAll(".pricing-card")
+  .forEach((card) => {
+
+    const button =
+      card.querySelector(".btn");
+
+    const time =
+      card.querySelector(
+        ".pricing-time"
+      );
+
+    if (
+      !button ||
+      !time ||
+      !consultationSelect
+    ) {
+      return;
+    }
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        const text =
+          time.textContent
+            .trim()
+            .toLowerCase();
+
+        if (text.includes("30")) {
+
+          consultationSelect.value =
+            "30 minutos - $30";
+
+        }
+
+        if (text.includes("60")) {
+
+          consultationSelect.value =
+            "60 minutos - $60";
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   FORM STATUS HELPER
+========================================================= */
+
+function showFormStatus(
+  type,
+  message
+) {
+
+  const formStatus =
+    document.getElementById(
+      "formStatus"
+    );
+
+  if (!formStatus) {
+    return;
+  }
+
+  formStatus.className =
+    "form-status " + type;
+
+  formStatus.textContent =
+    message;
+
+}
+
+
+/* =========================================================
+   LEGAL INTAKE FORM
+========================================================= */
+
+const intakeForm =
+  document.getElementById(
+    "intakeForm"
+  );
+
+if (intakeForm) {
+
+  intakeForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      /* ---------------------------------
+         Browser validation
+      --------------------------------- */
+
+      if (
+        !intakeForm.checkValidity()
+      ) {
+
+        intakeForm.reportValidity();
+
+        return;
+
+      }
+
+
+      /* ---------------------------------
+         Find submit button
+      --------------------------------- */
+
+      const submitButton =
+        intakeForm.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      /* ---------------------------------
+         Disable button while sending
+      --------------------------------- */
+
+      if (submitButton) {
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+          "Enviando solicitud...";
+
+      }
+
+
+      /* ---------------------------------
+         Clear previous message
+      --------------------------------- */
+
+      const formStatus =
+        document.getElementById(
+          "formStatus"
+        );
+
+      if (formStatus) {
+
+        formStatus.className =
+          "form-status";
+
+        formStatus.textContent =
+          "";
+
+      }
+
+
+      try {
+
+        /* ---------------------------------
+           Send intake through EmailJS
+        --------------------------------- */
+
+        const response =
+          await emailjs.sendForm(
+
+            EMAILJS_SERVICE_ID,
+
+            EMAILJS_TEMPLATE_ID,
+
+            intakeForm
+
+          );
+
+
+        console.log(
+          "Email enviado:",
+          response.status,
+          response.text
+        );
+
+
+        /* ---------------------------------
+           Success message
+        --------------------------------- */
+
+        showFormStatus(
+
+          "success",
+
+          "¡Gracias! Tu solicitud fue enviada correctamente. Estefania revisará la información proporcionada y se comunicará contigo utilizando los datos de contacto que ingresaste."
+
+        );
+
+
+        /* ---------------------------------
+           Reset form
+        --------------------------------- */
+
+        intakeForm.reset();
+
+
+        if (characterCount) {
+
+          characterCount.textContent =
+            "0";
+
+        }
+
+
+        /* ---------------------------------
+           Show success message clearly
+        --------------------------------- */
+
+        if (formStatus) {
+
+          formStatus.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          "Error de EmailJS:",
+          error
+        );
+
+
+        showFormStatus(
+
+          "error",
+
+          "No pudimos enviar tu solicitud en este momento. Por favor intenta nuevamente o escribe directamente a estefania.rojas137@gmail.com."
+
+        );
+
+      } finally {
+
+        /* ---------------------------------
+           Restore submit button
+        --------------------------------- */
+
+        if (submitButton) {
+
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            "Preparar Solicitud por Correo";
+
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SCROLL REVEAL EFFECT
 ========================================================= */
 
 const revealElements =
   document.querySelectorAll(
+
     ".service-card, " +
     ".process-step, " +
     ".pricing-card, " +
     ".intake-layout, " +
     ".attorney-section, " +
-    ".disclaimer-card"
+    ".disclaimer-card, " +
+    ".credential-image-card, " +
+    ".professional-highlight-card"
+
   );
 
 
-if ("IntersectionObserver" in window) {
+if (
+  "IntersectionObserver"
+  in window
+) {
 
   const observer =
     new IntersectionObserver(
@@ -196,417 +503,7 @@ if ("IntersectionObserver" in window) {
 
 
 /* =========================================================
-   AUTO-SELECT CONSULTATION LENGTH
-
-   Clicking the 30-minute or 60-minute pricing buttons
-   automatically selects the matching option in the intake.
-========================================================= */
-
-const consultLength =
-  document.getElementById(
-    "consultLength"
-  );
-
-
-document
-  .querySelectorAll(".pricing-card")
-  .forEach((card) => {
-
-    const button =
-      card.querySelector(".btn");
-
-    const time =
-      card.querySelector(
-        ".pricing-time"
-      );
-
-    if (
-      !button ||
-      !time ||
-      !consultLength
-    ) {
-
-      return;
-
-    }
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        const text =
-          time.textContent
-            .trim()
-            .toLowerCase();
-
-
-        if (
-          text.includes("30")
-        ) {
-
-          consultLength.value =
-            "30 minutos - $30";
-
-        }
-
-
-        if (
-          text.includes("60")
-        ) {
-
-          consultLength.value =
-            "60 minutos - $60";
-
-        }
-
-      }
-    );
-
-  });
-
-
-/* =========================================================
-   LEGAL INTAKE FORM
-========================================================= */
-
-const intakeForm =
-  document.getElementById(
-    "legalIntakeForm"
-  );
-
-const formStatus =
-  document.getElementById(
-    "formStatus"
-  );
-
-const submitButton =
-  document.getElementById(
-    "submitIntake"
-  );
-
-
-/* =========================================================
-   HELPER:
-   FORM STATUS MESSAGE
-========================================================= */
-
-function showFormStatus(
-  type,
-  message
-) {
-
-  if (!formStatus) return;
-
-  formStatus.className =
-    "form-status " + type;
-
-  formStatus.textContent =
-    message;
-
-}
-
-
-/* =========================================================
-   FORM SUBMISSION
-========================================================= */
-
-if (intakeForm) {
-
-  intakeForm.addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-
-      /* ---------------------------------
-         Browser validation
-      --------------------------------- */
-
-      if (
-        !intakeForm.checkValidity()
-      ) {
-
-        intakeForm.reportValidity();
-
-        return;
-
-      }
-
-
-      /* ---------------------------------
-         Verify EmailJS configuration
-      --------------------------------- */
-
-      if (
-        EMAILJS_PUBLIC_KEY ===
-          "YOUR_PUBLIC_KEY" ||
-
-        EMAILJS_SERVICE_ID ===
-          "YOUR_SERVICE_ID" ||
-
-        EMAILJS_INTAKE_TEMPLATE_ID ===
-          "YOUR_INTAKE_TEMPLATE_ID" ||
-
-        EMAILJS_CONFIRMATION_TEMPLATE_ID ===
-          "YOUR_CONFIRMATION_TEMPLATE_ID"
-      ) {
-
-        showFormStatus(
-
-          "error",
-
-          "El formulario todavía está en modo de configuración. Por favor escribe directamente a estefania.rojas137@gmail.com."
-
-        );
-
-        return;
-
-      }
-
-
-      /* ---------------------------------
-         Disable button
-      --------------------------------- */
-
-      if (submitButton) {
-
-        submitButton.disabled =
-          true;
-
-        submitButton.textContent =
-          "Enviando solicitud...";
-
-      }
-
-
-      formStatus.className =
-        "form-status";
-
-      formStatus.textContent =
-        "";
-
-
-      /* ---------------------------------
-         Gather form data
-      --------------------------------- */
-
-      const formData =
-        new FormData(
-          intakeForm
-        );
-
-
-      const templateParams = {
-
-        first_name:
-          formData.get(
-            "first_name"
-          ),
-
-        last_name:
-          formData.get(
-            "last_name"
-          ),
-
-        email:
-          formData.get(
-            "email"
-          ),
-
-        phone:
-          formData.get(
-            "phone"
-          ),
-
-        country:
-          formData.get(
-            "country"
-          ),
-
-        jurisdiction:
-          formData.get(
-            "jurisdiction"
-          ) ||
-          "No indicado",
-
-        legal_area:
-          formData.get(
-            "legal_area"
-          ),
-
-        consult_length:
-          formData.get(
-            "consult_length"
-          ),
-
-        other_party:
-          formData.get(
-            "other_party"
-          ) ||
-          "No indicado",
-
-        deadline:
-          formData.get(
-            "deadline"
-          ) ||
-          "No indicado",
-
-        matter_summary:
-          formData.get(
-            "matter_summary"
-          )
-
-      };
-
-
-      try {
-
-        /* ---------------------------------
-           Email #1:
-           Intake to Estefania
-        --------------------------------- */
-
-        await emailjs.send(
-
-          EMAILJS_SERVICE_ID,
-
-          EMAILJS_INTAKE_TEMPLATE_ID,
-
-          templateParams
-
-        );
-
-
-        /* ---------------------------------
-           Email #2:
-           Confirmation to submitter
-        --------------------------------- */
-
-        await emailjs.send(
-
-          EMAILJS_SERVICE_ID,
-
-          EMAILJS_CONFIRMATION_TEMPLATE_ID,
-
-          templateParams
-
-        );
-
-
-        /* ---------------------------------
-           Success
-        --------------------------------- */
-
-        showFormStatus(
-
-          "success",
-
-          "Gracias. Tu solicitud fue enviada correctamente. También recibirás una confirmación en el correo electrónico que proporcionaste."
-
-        );
-
-
-        intakeForm.reset();
-
-
-        formStatus.scrollIntoView({
-
-          behavior: "smooth",
-
-          block: "center"
-
-        });
-
-
-      } catch (error) {
-
-        console.error(
-          "EmailJS error:",
-          error
-        );
-
-
-        showFormStatus(
-
-          "error",
-
-          "No pudimos enviar tu solicitud en este momento. Intenta nuevamente o escribe directamente a estefania.rojas137@gmail.com."
-
-        );
-
-      } finally {
-
-        if (submitButton) {
-
-          submitButton.disabled =
-            false;
-
-          submitButton.textContent =
-            "Enviar solicitud";
-
-        }
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   CHARACTER COUNTER
-========================================================= */
-
-const matterSummary =
-  document.getElementById(
-    "matterSummary"
-  );
-
-
-if (matterSummary) {
-
-  const characterCounter =
-    document.createElement(
-      "div"
-    );
-
-  characterCounter.className =
-    "character-counter";
-
-  characterCounter.textContent =
-    "0 / 2500 caracteres";
-
-
-  matterSummary
-    .parentNode
-    .appendChild(
-      characterCounter
-    );
-
-
-  matterSummary.addEventListener(
-    "input",
-    () => {
-
-      const count =
-        matterSummary
-          .value
-          .length;
-
-      characterCounter.textContent =
-        count +
-        " / 2500 caracteres";
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   EXTERNAL LINK SAFETY
+   EXTERNAL LINK SECURITY
 ========================================================= */
 
 document
@@ -615,19 +512,24 @@ document
   )
   .forEach((link) => {
 
-    const rel =
+    const currentRel =
       link.getAttribute("rel") || "";
 
     if (
-      !rel.includes("noopener")
+      !currentRel.includes(
+        "noopener"
+      )
     ) {
 
       link.setAttribute(
+
         "rel",
+
         (
-          rel +
+          currentRel +
           " noopener noreferrer"
         ).trim()
+
       );
 
     }

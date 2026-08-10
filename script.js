@@ -1,631 +1,635 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+/* =========================================================
+   ESTEFANIA ROJAS
+   U.S. LEGAL CONSULTATIONS
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   Main Website JavaScript
+========================================================= */
 
-  <title>Estefania Rojas | Consultas de Derecho de EE.UU.</title>
 
-  <meta
-    name="description"
-    content="Consultas privadas sobre derecho de Estados Unidos, incluyendo derecho de Texas, inmigración federal, asuntos penales y orientación sobre próximos pasos y recursos legales."
-  >
+/* =========================================================
+   EMAILJS CONFIGURATION
 
-  <link rel="stylesheet" href="style.css">
+   IMPORTANT:
+   Replace these four values after creating the EmailJS
+   service and two email templates.
+========================================================= */
 
-  <link rel="icon"
-        href='data:image/svg+xml,
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <text y=".9em" font-size="90">⚖️</text>
-        </svg>'>
+const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+const EMAILJS_INTAKE_TEMPLATE_ID =
+  "YOUR_INTAKE_TEMPLATE_ID";
 
-  <link rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
+const EMAILJS_CONFIRMATION_TEMPLATE_ID =
+  "YOUR_CONFIRMATION_TEMPLATE_ID";
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
 
-</head>
+/* =========================================================
+   INITIALIZE EMAILJS
+========================================================= */
 
-<body>
+if (
+  window.emailjs &&
+  EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY"
+) {
 
-<header class="site-header">
+  emailjs.init({
+    publicKey: EMAILJS_PUBLIC_KEY
+  });
 
-  <a href="#inicio" class="brand">
+}
 
-    <div class="monogram">
-      ER
-    </div>
 
-    <div class="brand-copy">
-      <h1>Estefania Rojas</h1>
-      <p>U.S. Legal Consultations</p>
-    </div>
+/* =========================================================
+   SMOOTH PAGE NAVIGATION
+========================================================= */
 
-  </a>
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
 
-  <nav class="main-nav">
+  link.addEventListener("click", function(event) {
 
-    <a href="#servicios">Áreas de Consulta</a>
+    const targetId = this.getAttribute("href");
 
-    <a href="#proceso">Cómo Funciona</a>
+    if (
+      !targetId ||
+      targetId === "#"
+    ) {
 
-    <a href="#precios">Tarifas</a>
+      event.preventDefault();
 
-    <a href="#perfil">Sobre la Abogada</a>
+      return;
 
-  </nav>
+    }
 
-  <a href="#precios" class="header-cta">
-    Agendar Consulta
-  </a>
+    const target = document.querySelector(targetId);
 
-</header>
+    if (!target) return;
 
+    event.preventDefault();
 
-<main id="inicio">
+    target.scrollIntoView({
 
-  <!-- HERO -->
+      behavior: "smooth",
 
-  <section class="hero">
+      block: "start"
 
-    <div class="hero-content">
+    });
 
-      <p class="eyebrow">
-        Consultas privadas de Derecho de EE.UU.
-      </p>
+  });
 
-      <h2>
-        ¿Tienes una pregunta sobre las leyes de Estados Unidos?
-      </h2>
+});
 
-      <p class="hero-description">
-        Habla directamente con una abogada estadounidense y obtén una
-        explicación clara de tu situación, posibles próximos pasos y
-        recursos disponibles.
-      </p>
 
-      <div class="hero-actions">
+/* =========================================================
+   STICKY HEADER SHADOW
+========================================================= */
 
-        <a href="#precios" class="btn btn-gold">
-          Consulta de 30 min · $30
-        </a>
+const header =
+  document.querySelector(".site-header");
 
-        <a href="#precios" class="btn btn-outline">
-          Consulta de 60 min · $60
-        </a>
+function updateHeader() {
 
-      </div>
+  if (!header) return;
 
-      <div class="hero-trust">
+  if (window.scrollY > 20) {
 
-        <span>✓ Atención privada</span>
+    header.classList.add(
+      "header-scrolled"
+    );
 
-        <span>✓ Consulta virtual</span>
+  } else {
 
-        <span>✓ Orientación clara</span>
+    header.classList.remove(
+      "header-scrolled"
+    );
 
-      </div>
+  }
 
-    </div>
+}
 
+window.addEventListener(
+  "scroll",
+  updateHeader
+);
 
-    <div class="hero-panel">
+updateHeader();
 
-      <div class="legal-mark">
-        ⚖
-      </div>
 
-      <p class="panel-label">
-        Orientación legal inicial
-      </p>
+/* =========================================================
+   SUBTLE SCROLL REVEAL
+========================================================= */
 
-      <h3>
-        Claridad antes de tomar el siguiente paso.
-      </h3>
+const revealElements =
+  document.querySelectorAll(
+    ".service-card, " +
+    ".process-step, " +
+    ".pricing-card, " +
+    ".intake-layout, " +
+    ".attorney-section, " +
+    ".disclaimer-card"
+  );
 
-      <p>
-        Entiende mejor tu situación, qué preguntas debes hacer y qué
-        tipo de recurso o profesional puede ayudarte.
-      </p>
 
-      <div class="jurisdictions">
+if ("IntersectionObserver" in window) {
 
-        <span>Texas</span>
+  const observer =
+    new IntersectionObserver(
 
-        <span>Federal</span>
+      (entries) => {
 
-        <span>EE.UU.</span>
+        entries.forEach(
+          (entry) => {
 
-      </div>
+            if (
+              entry.isIntersecting
+            ) {
 
-    </div>
+              entry.target.classList.add(
+                "visible"
+              );
 
-  </section>
+              observer.unobserve(
+                entry.target
+              );
 
+            }
 
-  <!-- TRUST STRIP -->
+          }
+        );
 
-  <section class="trust-strip">
+      },
 
-    <div>
-      <strong>30 o 60 minutos</strong>
-      <span>Elige la duración que necesitas.</span>
-    </div>
+      {
+        threshold: 0.12
+      }
 
-    <div>
-      <strong>100% virtual</strong>
-      <span>Consulta desde Ecuador o cualquier otro lugar.</span>
-    </div>
+    );
 
-    <div>
-      <strong>Sin compromiso continuo</strong>
-      <span>Orientación legal de alcance limitado.</span>
-    </div>
 
-    <div>
-      <strong>En español</strong>
-      <span>Explicaciones claras y accesibles.</span>
-    </div>
+  revealElements.forEach(
+    (element) => {
 
-  </section>
+      element.classList.add(
+        "reveal"
+      );
 
+      observer.observe(
+        element
+      );
 
-  <!-- SERVICES -->
+    }
+  );
 
-  <section id="servicios" class="section services-section">
+} else {
 
-    <div class="section-heading">
+  revealElements.forEach(
+    (element) => {
 
-      <p class="eyebrow">
-        Áreas de consulta
-      </p>
+      element.classList.add(
+        "visible"
+      );
 
-      <h2>
-        ¿En qué podemos orientarte?
-      </h2>
+    }
+  );
 
-      <p>
-        Cada consulta se enfoca en ayudarte a comprender mejor tu situación,
-        identificar posibles próximos pasos y reconocer cuándo necesitas
-        representación adicional.
-      </p>
+}
 
-    </div>
 
+/* =========================================================
+   AUTO-SELECT CONSULTATION LENGTH
 
-    <div class="services-grid">
+   Clicking the 30-minute or 60-minute pricing buttons
+   automatically selects the matching option in the intake.
+========================================================= */
 
-      <article class="service-card">
+const consultLength =
+  document.getElementById(
+    "consultLength"
+  );
 
-        <div class="service-number">
-          01
-        </div>
 
-        <h3>
-          Inmigración e ICE
-        </h3>
+document
+  .querySelectorAll(".pricing-card")
+  .forEach((card) => {
 
-        <p>
-          Preguntas sobre procesos migratorios, USCIS, ICE, detención,
-          documentación y próximos pasos dentro del sistema migratorio federal.
-        </p>
+    const button =
+      card.querySelector(".btn");
 
-        <span class="service-label">
-          Derecho Federal
-        </span>
+    const time =
+      card.querySelector(
+        ".pricing-time"
+      );
 
-      </article>
+    if (
+      !button ||
+      !time ||
+      !consultLength
+    ) {
 
+      return;
 
-      <article class="service-card">
+    }
 
-        <div class="service-number">
-          02
-        </div>
+    button.addEventListener(
+      "click",
+      () => {
 
-        <h3>
-          Derecho Familiar de Texas
-        </h3>
+        const text =
+          time.textContent
+            .trim()
+            .toLowerCase();
 
-        <p>
-          Orientación inicial sobre divorcio, custodia, manutención,
-          modificaciones, órdenes judiciales y otros asuntos familiares.
-        </p>
 
-        <span class="service-label">
-          Texas
-        </span>
+        if (
+          text.includes("30")
+        ) {
 
-      </article>
+          consultLength.value =
+            "30 minutos - $30";
 
+        }
 
-      <article class="service-card">
 
-        <div class="service-number">
-          03
-        </div>
+        if (
+          text.includes("60")
+        ) {
 
-        <h3>
-          Asuntos Penales
-        </h3>
+          consultLength.value =
+            "60 minutos - $60";
 
-        <p>
-          Ayuda para comprender cargos, procedimientos, documentos,
-          antecedentes y posibles próximos pasos en asuntos penales dentro
-          del alcance de la consulta.
-        </p>
+        }
 
-        <span class="service-label">
-          Consulta Inicial
-        </span>
+      }
+    );
 
-      </article>
+  });
 
 
-      <article class="service-card">
+/* =========================================================
+   LEGAL INTAKE FORM
+========================================================= */
 
-        <div class="service-number">
-          04
-        </div>
+const intakeForm =
+  document.getElementById(
+    "legalIntakeForm"
+  );
 
-        <h3>
-          Orientación Legal de EE.UU.
-        </h3>
+const formStatus =
+  document.getElementById(
+    "formStatus"
+  );
 
-        <p>
-          ¿No sabes qué tipo de abogado necesitas? Podemos ayudarte a
-          identificar el área legal aplicable, entender el proceso general
-          y encontrar recursos apropiados.
-        </p>
+const submitButton =
+  document.getElementById(
+    "submitIntake"
+  );
 
-        <span class="service-label">
-          Recursos y Próximos Pasos
-        </span>
 
-      </article>
+/* =========================================================
+   HELPER:
+   FORM STATUS MESSAGE
+========================================================= */
 
-    </div>
+function showFormStatus(
+  type,
+  message
+) {
 
-  </section>
+  if (!formStatus) return;
 
+  formStatus.className =
+    "form-status " + type;
 
-  <!-- HOW IT WORKS -->
+  formStatus.textContent =
+    message;
 
-  <section id="proceso" class="section process-section">
+}
 
-    <div class="section-heading">
 
-      <p class="eyebrow">
-        Simple y directo
-      </p>
+/* =========================================================
+   FORM SUBMISSION
+========================================================= */
 
-      <h2>
-        Cómo funciona
-      </h2>
+if (intakeForm) {
 
-    </div>
+  intakeForm.addEventListener(
+    "submit",
+    async function(event) {
 
+      event.preventDefault();
 
-    <div class="process-grid">
 
-      <div class="process-step">
+      /* ---------------------------------
+         Browser validation
+      --------------------------------- */
 
-        <span>
-          1
-        </span>
+      if (
+        !intakeForm.checkValidity()
+      ) {
 
-        <h3>
-          Elige tu consulta
-        </h3>
+        intakeForm.reportValidity();
 
-        <p>
-          Selecciona una sesión de 30 o 60 minutos según la complejidad
-          de tus preguntas.
-        </p>
+        return;
 
-      </div>
+      }
 
 
-      <div class="process-step">
+      /* ---------------------------------
+         Verify EmailJS configuration
+      --------------------------------- */
 
-        <span>
-          2
-        </span>
+      if (
+        EMAILJS_PUBLIC_KEY ===
+          "YOUR_PUBLIC_KEY" ||
 
-        <h3>
-          Comparte información básica
-        </h3>
+        EMAILJS_SERVICE_ID ===
+          "YOUR_SERVICE_ID" ||
 
-        <p>
-          Antes de la llamada podrás explicar brevemente tu situación para
-          aprovechar mejor el tiempo.
-        </p>
+        EMAILJS_INTAKE_TEMPLATE_ID ===
+          "YOUR_INTAKE_TEMPLATE_ID" ||
 
-      </div>
+        EMAILJS_CONFIRMATION_TEMPLATE_ID ===
+          "YOUR_CONFIRMATION_TEMPLATE_ID"
+      ) {
 
+        showFormStatus(
 
-      <div class="process-step">
+          "error",
 
-        <span>
-          3
-        </span>
+          "El formulario todavía está en modo de configuración. Por favor escribe directamente a estefania.rojas137@gmail.com."
 
-        <h3>
-          Agenda tu horario
-        </h3>
+        );
 
-        <p>
-          Selecciona el día y la hora disponibles que mejor funcionen para ti.
-        </p>
+        return;
 
-      </div>
+      }
 
 
-      <div class="process-step">
+      /* ---------------------------------
+         Disable button
+      --------------------------------- */
 
-        <span>
-          4
-        </span>
+      if (submitButton) {
 
-        <h3>
-          Habla con Estefania
-        </h3>
+        submitButton.disabled =
+          true;
 
-        <p>
-          Recibe orientación clara sobre tu situación y los próximos pasos
-          que podrías considerar.
-        </p>
+        submitButton.textContent =
+          "Enviando solicitud...";
 
-      </div>
+      }
 
-    </div>
 
-  </section>
+      formStatus.className =
+        "form-status";
 
+      formStatus.textContent =
+        "";
 
-  <!-- PRICING -->
 
-  <section id="precios" class="section pricing-section">
+      /* ---------------------------------
+         Gather form data
+      --------------------------------- */
 
-    <div class="section-heading">
+      const formData =
+        new FormData(
+          intakeForm
+        );
 
-      <p class="eyebrow">
-        Tarifas sencillas
-      </p>
 
-      <h2>
-        Elige el tiempo que necesitas
-      </h2>
+      const templateParams = {
 
-      <p>
-        Sin estructuras complicadas de honorarios para una consulta inicial.
-      </p>
+        first_name:
+          formData.get(
+            "first_name"
+          ),
 
-    </div>
+        last_name:
+          formData.get(
+            "last_name"
+          ),
 
+        email:
+          formData.get(
+            "email"
+          ),
 
-    <div class="pricing-grid">
+        phone:
+          formData.get(
+            "phone"
+          ),
 
-      <article class="pricing-card">
+        country:
+          formData.get(
+            "country"
+          ),
 
-        <p class="pricing-time">
-          30 minutos
-        </p>
+        jurisdiction:
+          formData.get(
+            "jurisdiction"
+          ) ||
+          "No indicado",
 
-        <div class="price">
-          <span>$</span>30
-        </div>
+        legal_area:
+          formData.get(
+            "legal_area"
+          ),
 
-        <p>
-          Ideal para una pregunta concreta, explicación de un documento
-          o comprensión inicial de tus opciones.
-        </p>
+        consult_length:
+          formData.get(
+            "consult_length"
+          ),
 
-        <a href="#" class="btn btn-dark">
-          Agendar 30 minutos
-        </a>
+        other_party:
+          formData.get(
+            "other_party"
+          ) ||
+          "No indicado",
 
-      </article>
+        deadline:
+          formData.get(
+            "deadline"
+          ) ||
+          "No indicado",
 
+        matter_summary:
+          formData.get(
+            "matter_summary"
+          )
 
-      <article class="pricing-card featured">
+      };
 
-        <div class="popular-label">
-          Más tiempo para conversar
-        </div>
 
-        <p class="pricing-time">
-          60 minutos
-        </p>
+      try {
 
-        <div class="price">
-          <span>$</span>60
-        </div>
+        /* ---------------------------------
+           Email #1:
+           Intake to Estefania
+        --------------------------------- */
 
-        <p>
-          Ideal para situaciones más complejas, varios temas relacionados
-          o una revisión más detallada de tus preguntas.
-        </p>
+        await emailjs.send(
 
-        <a href="#" class="btn btn-gold">
-          Agendar 60 minutos
-        </a>
+          EMAILJS_SERVICE_ID,
 
-      </article>
+          EMAILJS_INTAKE_TEMPLATE_ID,
 
-    </div>
+          templateParams
 
-  </section>
+        );
 
 
-  <!-- ABOUT -->
+        /* ---------------------------------
+           Email #2:
+           Confirmation to submitter
+        --------------------------------- */
 
-  <section id="perfil" class="section attorney-section">
+        await emailjs.send(
 
-    <div class="attorney-photo-placeholder">
+          EMAILJS_SERVICE_ID,
 
-      <span>
-        ER
-      </span>
+          EMAILJS_CONFIRMATION_TEMPLATE_ID,
 
-      <p>
-        Fotografía profesional próximamente
-      </p>
+          templateParams
 
-    </div>
+        );
 
 
-    <div class="attorney-copy">
+        /* ---------------------------------
+           Success
+        --------------------------------- */
 
-      <p class="eyebrow">
-        Sobre la abogada
-      </p>
+        showFormStatus(
 
-      <h2>
-        Estefania Rojas
-      </h2>
+          "success",
 
-      <p class="attorney-title">
-        U.S. Attorney · Consultas de Derecho de EE.UU.
-      </p>
+          "Gracias. Tu solicitud fue enviada correctamente. También recibirás una confirmación en el correo electrónico que proporcionaste."
 
-      <p>
-        Estefania ofrece consultas privadas para personas que necesitan
-        comprender mejor una situación legal relacionada con Estados Unidos,
-        hacer preguntas específicas o identificar recursos y próximos pasos.
-      </p>
+        );
 
-      <p>
-        Su enfoque busca convertir procesos legales complejos en conversaciones
-        claras, prácticas y fáciles de entender.
-      </p>
 
+        intakeForm.reset();
 
-      <div class="credentials">
 
-        <div>
-          <strong>Licencia</strong>
-          <span>Texas</span>
-        </div>
+        formStatus.scrollIntoView({
 
-        <div>
-          <strong>Idiomas</strong>
-          <span>Español · Inglés</span>
-        </div>
+          behavior: "smooth",
 
-        <div>
-          <strong>Modalidad</strong>
-          <span>Virtual</span>
-        </div>
+          block: "center"
 
-      </div>
+        });
 
-    </div>
 
-  </section>
+      } catch (error) {
 
+        console.error(
+          "EmailJS error:",
+          error
+        );
 
-  <!-- DISCLAIMER -->
 
-  <section class="disclaimer-section">
+        showFormStatus(
 
-    <div class="disclaimer-card">
+          "error",
 
-      <h2>
-        Información importante sobre la consulta
-      </h2>
+          "No pudimos enviar tu solicitud en este momento. Intenta nuevamente o escribe directamente a estefania.rojas137@gmail.com."
 
-      <p>
-        Este servicio ofrece orientación legal de alcance limitado.
-        La contratación de una consulta de 30 o 60 minutos no significa
-        que Estefania Rojas haya aceptado representar al cliente de forma
-        continua en una demanda, audiencia, procedimiento migratorio u otro
-        asunto legal.
-      </p>
+        );
 
-      <p>
-        Cualquier representación adicional requerirá un acuerdo escrito
-        separado. Para asuntos fuera de las jurisdicciones o materias en las
-        que se pueda brindar asesoría específica, la consulta podrá limitarse
-        a información general, identificación de recursos o referencia al
-        tipo de profesional apropiado.
-      </p>
+      } finally {
 
-      <p>
-        No se brinda asesoría sobre derecho ecuatoriano.
-      </p>
+        if (submitButton) {
 
-    </div>
+          submitButton.disabled =
+            false;
 
-  </section>
+          submitButton.textContent =
+            "Enviar solicitud";
 
+        }
 
-  <!-- FINAL CTA -->
+      }
 
-  <section class="final-cta">
+    }
+  );
 
-    <p class="eyebrow light">
-      Cuando no sabes por dónde empezar
-    </p>
+}
 
-    <h2>
-      Empieza con una conversación.
-    </h2>
 
-    <p>
-      Una consulta puede ayudarte a entender mejor tu situación antes
-      de tomar una decisión importante.
-    </p>
+/* =========================================================
+   CHARACTER COUNTER
+========================================================= */
 
-    <div class="hero-actions centered">
+const matterSummary =
+  document.getElementById(
+    "matterSummary"
+  );
 
-      <a href="#precios" class="btn btn-gold">
-        Ver opciones de consulta
-      </a>
 
-    </div>
+if (matterSummary) {
 
-  </section>
+  const characterCounter =
+    document.createElement(
+      "div"
+    );
 
-</main>
+  characterCounter.className =
+    "character-counter";
 
+  characterCounter.textContent =
+    "0 / 2500 caracteres";
 
-<footer>
 
-  <div class="footer-brand">
+  matterSummary
+    .parentNode
+    .appendChild(
+      characterCounter
+    );
 
-    <h3>
-      Estefania Rojas
-    </h3>
 
-    <p>
-      U.S. Legal Consultations
-    </p>
+  matterSummary.addEventListener(
+    "input",
+    () => {
 
-  </div>
+      const count =
+        matterSummary
+          .value
+          .length;
 
-  <div class="footer-copy">
+      characterCounter.textContent =
+        count +
+        " / 2500 caracteres";
 
-    <p>
-      Consultas virtuales sobre asuntos legales de Estados Unidos.
-    </p>
+    }
+  );
 
-    <p>
-      © 2026 Estefania Rojas. Todos los derechos reservados.
-    </p>
+}
 
-  </div>
 
-</footer>
+/* =========================================================
+   EXTERNAL LINK SAFETY
+========================================================= */
 
+document
+  .querySelectorAll(
+    'a[target="_blank"]'
+  )
+  .forEach((link) => {
 
-<script src="script.js"></script>
+    const rel =
+      link.getAttribute("rel") || "";
 
-</body>
-</html>
+    if (
+      !rel.includes("noopener")
+    ) {
+
+      link.setAttribute(
+        "rel",
+        (
+          rel +
+          " noopener noreferrer"
+        ).trim()
+      );
+
+    }
+
+  });

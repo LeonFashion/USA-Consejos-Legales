@@ -1,5 +1,5 @@
 /* =========================================================
-   ESTEFANIA LEÓN
+   ESTEFANIA LEON
    U.S. LEGAL CONSULTATIONS
    MAIN JAVASCRIPT
 ========================================================= */
@@ -43,7 +43,7 @@ document
 
     link.addEventListener(
       "click",
-      function(event) {
+      function (event) {
 
         const targetId =
           this.getAttribute("href");
@@ -82,6 +82,7 @@ document
 const header =
   document.querySelector(".site-header");
 
+
 function updateHeader() {
 
   if (!header) {
@@ -104,10 +105,12 @@ function updateHeader() {
 
 }
 
+
 window.addEventListener(
   "scroll",
   updateHeader
 );
+
 
 updateHeader();
 
@@ -123,6 +126,7 @@ const characterCount =
   document.getElementById(
     "characterCount"
   );
+
 
 if (
   messageField &&
@@ -147,13 +151,14 @@ if (
 
 
 /* =========================================================
-   AUTO-SELECT 30 / 60 MINUTE CONSULTATION
+   AUTO-SELECT CONSULTATION LENGTH
 ========================================================= */
 
 const consultationSelect =
   document.getElementById(
     "consultation"
   );
+
 
 document
   .querySelectorAll(".pricing-card")
@@ -167,6 +172,7 @@ document
         ".pricing-time"
       );
 
+
     if (
       !button ||
       !time ||
@@ -174,6 +180,7 @@ document
     ) {
       return;
     }
+
 
     button.addEventListener(
       "click",
@@ -184,14 +191,20 @@ document
             .trim()
             .toLowerCase();
 
-        if (text.includes("30")) {
+
+        if (
+          text.includes("30")
+        ) {
 
           consultationSelect.value =
             "30 minutos - $30";
 
         }
 
-        if (text.includes("60")) {
+
+        if (
+          text.includes("60")
+        ) {
 
           consultationSelect.value =
             "60 minutos - $60";
@@ -218,9 +231,11 @@ function showFormStatus(
       "formStatus"
     );
 
+
   if (!formStatus) {
     return;
   }
+
 
   formStatus.className =
     "form-status " + type;
@@ -240,11 +255,12 @@ const intakeForm =
     "intakeForm"
   );
 
+
 if (intakeForm) {
 
   intakeForm.addEventListener(
     "submit",
-    async function(event) {
+    async function (event) {
 
       event.preventDefault();
 
@@ -265,7 +281,7 @@ if (intakeForm) {
 
 
       /* ---------------------------------
-         Find submit button
+         Submit button
       --------------------------------- */
 
       const submitButton =
@@ -273,10 +289,6 @@ if (intakeForm) {
           'button[type="submit"]'
         );
 
-
-      /* ---------------------------------
-         Disable button while sending
-      --------------------------------- */
 
       if (submitButton) {
 
@@ -289,13 +301,14 @@ if (intakeForm) {
 
 
       /* ---------------------------------
-         Clear previous message
+         Clear prior status
       --------------------------------- */
 
       const formStatus =
         document.getElementById(
           "formStatus"
         );
+
 
       if (formStatus) {
 
@@ -308,10 +321,41 @@ if (intakeForm) {
       }
 
 
+      /* ---------------------------------
+         Confirm EmailJS exists
+      --------------------------------- */
+
+      if (!window.emailjs) {
+
+        showFormStatus(
+
+          "error",
+
+          "No pudimos conectar con el servicio de correo. Por favor intenta nuevamente o escribe directamente a estefania.rojas137@gmail.com."
+
+        );
+
+
+        if (submitButton) {
+
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            "Enviar Solicitud";
+
+        }
+
+
+        return;
+
+      }
+
+
       try {
 
+
         /* ---------------------------------
-           Send intake through EmailJS
+           Send form through EmailJS
         --------------------------------- */
 
         const response =
@@ -362,7 +406,7 @@ if (intakeForm) {
 
 
         /* ---------------------------------
-           Show success message clearly
+           Bring success confirmation into view
         --------------------------------- */
 
         if (formStatus) {
@@ -376,6 +420,7 @@ if (intakeForm) {
 
 
       } catch (error) {
+
 
         console.error(
           "Error de EmailJS:",
@@ -391,11 +436,9 @@ if (intakeForm) {
 
         );
 
+
       } finally {
 
-        /* ---------------------------------
-           Restore submit button
-        --------------------------------- */
 
         if (submitButton) {
 
@@ -403,7 +446,7 @@ if (intakeForm) {
             false;
 
           submitButton.textContent =
-            "Preparar Solicitud por Correo";
+            "Enviar Solicitud";
 
         }
 
@@ -435,8 +478,7 @@ const revealElements =
 
 
 if (
-  "IntersectionObserver"
-  in window
+  "IntersectionObserver" in window
 ) {
 
   const observer =
@@ -487,7 +529,9 @@ if (
     }
   );
 
+
 } else {
+
 
   revealElements.forEach(
     (element) => {
@@ -514,6 +558,7 @@ document
 
     const currentRel =
       link.getAttribute("rel") || "";
+
 
     if (
       !currentRel.includes(
